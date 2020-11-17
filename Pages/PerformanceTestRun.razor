@@ -5,7 +5,8 @@
 
 @if (performanceTests.Count > 0)
 {
-<div>@performanceRunMessage</div>
+<div style=@((cancelPerformanceTest) ? "color: red;" : "color:blue;")>@performanceRunMessage</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -36,18 +37,18 @@
     private string performanceRunMessage = "Running Test...";
     private bool cancelPerformanceTest = false;
 
-
     List<PerformanceTest> performanceTests = new List<PerformanceTest>();
 
     private async Task StartPerformanceTest()
     {
+        this.performanceTests = new List<PerformanceTest>();
         List<PerformanceTest> performanceTestHarness = new List<PerformanceTest>();
+
         performanceTestHarness.AddRange(new List<PerformanceTest>
-    {
-            new PerformanceTest { ID = 1, DistributionName = "Binomial", SamplesNumber = 1000, TrialsNumber = 1000 },
-            new PerformanceTest { ID = 2, DistributionName = "Binomial", SamplesNumber = 2000, TrialsNumber = 500 },
-            new PerformanceTest { ID = 3, DistributionName = "Binomial", SamplesNumber = 3000, TrialsNumber = 3000 },
-            new PerformanceTest { ID = 4, DistributionName = "Binomial", SamplesNumber = 1200, TrialsNumber = 2000 }
+        {
+            new PerformanceTest { ID = 1, DistributionName = "Binomial", SamplesNumber = 100, TrialsNumber = 100 },
+            new PerformanceTest { ID = 2, DistributionName = "Binomial", SamplesNumber = 500, TrialsNumber = 500 },
+            new PerformanceTest { ID = 3, DistributionName = "Binomial", SamplesNumber = 1000, TrialsNumber = 1000 }
         });
 
         foreach (var performanceTest in performanceTestHarness)
@@ -73,12 +74,9 @@
         this.performanceRunMessage = "Cancelled Run";
     }
 
-    private async Task<PerformanceTest> PerformPerformanceTestTypeAsync(PerformanceTest performanceTest)
+    private void ClearRuns()
     {
-        performanceTest.TestDuration = performanceTest.TakeSamples();
-        await Task.Delay(100);
-        base.StateHasChanged();
-
-        return performanceTest;
+        this.cancelPerformanceTest = true;
+        this.performanceRunMessage = "Cancelled Run";
     }
 }
