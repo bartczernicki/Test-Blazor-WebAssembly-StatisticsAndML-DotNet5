@@ -1,0 +1,52 @@
+﻿@if (PerformanceResults == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div><span>@PerformanceResults.Count</span></div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Test Name</th>
+                <th>Time (ms)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var performanceResult in PerformanceResults)
+            {
+                <tr>
+                    <td>@performanceResult.ID</td>
+                    <td>@performanceResult.TestName</td>
+                    <td>@performanceResult.Time</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<PerformanceResult> _value;
+
+    [Parameter]
+    public List<PerformanceResult> PerformanceResults
+    {
+        get { return _value; }
+        set
+        {
+            _value = value;
+            this.ParameterChanged();
+        }
+    }
+
+    private void ParameterChanged()
+    {
+        Console.WriteLine("Hello");
+        this.StateHasChanged();
+        base.StateHasChanged();
+        this.StateHasChanged();
+    }
+
+}

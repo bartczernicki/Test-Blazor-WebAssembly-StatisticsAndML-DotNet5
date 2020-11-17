@@ -1,0 +1,92 @@
+﻿@page "/PerformanceTest"
+
+<button class="btn btn-primary" @onclick="StartPerformanceTest">Start Performance Test</button>
+<button class="btn btn-primary" @onclick="CancelPerformanceTest">Cancel Performance Test</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Test Name</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var performanceResult in performanceResults)
+        {
+        <tr>
+            <td>@performanceResult.ID</td>
+            <td>@performanceResult.TestName</td>
+            <td>@performanceResult.Time</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private int currentCount = 0;
+    private bool cancelPerformanceTest = false;
+
+    List<PerformanceResult> performanceResults = new List<PerformanceResult>();
+
+    private async Task StartPerformanceTest()
+    {
+        PerformanceResult performanceResult;
+
+        performanceResult = this.PerformPerformanceTestType(1, "Binomial", 100, 2000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(2, "Binomial", 100, 5000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(3, "Binomial", 75, 20000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(4, "Binomial", 50, 25000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(5, "Binomial", 50, 25000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(6, "Binomial", 50, 25000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(6, "Binomial", 50, 25000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(6, "Binomial", 50, 25000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(6, "Binomial", 50, 25000);
+        performanceResults.Add(performanceResult);
+        await Task.Delay(100);
+        base.StateHasChanged();
+        performanceResult = this.PerformPerformanceTestType(6, "Binomial", 50, 25000);
+        performanceResults.Add(performanceResult);
+    }
+
+    private void CancelPerformanceTest()
+    {
+        this.cancelPerformanceTest = true;
+    }
+
+    private PerformanceResult PerformPerformanceTestType(int ID, string testName, int numberOfTrials, int samples)
+    {
+        var dateTime = DateTime.Now;
+        var binomaial = new MathNet.Numerics.Distributions.Binomial(0.5, numberOfTrials);
+        var generatedsamples = binomaial.Samples().Take(samples).ToArray();
+        var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
+
+        var performanceResults = new PerformanceResult { ID = ID, TestName = $"{testName}-Trials:{numberOfTrials}-Samples:{samples}", Time = dateTimeElapsed };
+
+        return performanceResults;
+    }
+}
