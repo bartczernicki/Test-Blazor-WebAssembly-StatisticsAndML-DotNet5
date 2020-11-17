@@ -8,6 +8,8 @@ namespace Test_Blazor_WebAssembly_StatisticsAndML_DotNet5
 {
     public class PerformanceTest
     {
+        string fullName = string.Empty;
+
         public int ID { get; set; }
 
         public string DistributionName { get; set; }
@@ -20,17 +22,44 @@ namespace Test_Blazor_WebAssembly_StatisticsAndML_DotNet5
 
         public double TakeSamples()
         {
+            var dateTimeElapsed = 0.0;
             var dateTime = DateTime.Now;
-            var binomaial = new MathNet.Numerics.Distributions.Binomial(0.5, this.TrialsNumber);
-            var generatedsamples = binomaial.Samples().Take(SamplesNumber).ToArray();
-            var dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
 
+            if (this.DistributionName == "Binomial")
+            {
+                fullName = $"{DistributionName}-Samples:{SamplesNumber}-Trials:{TrialsNumber}";
+
+                var binomaial = new MathNet.Numerics.Distributions.Binomial(0.5, this.TrialsNumber);
+                var generatedsamples = binomaial.Samples().Take(SamplesNumber).ToArray();
+            }
+            else if (this.DistributionName == "Geometric")
+            {
+                fullName = $"{DistributionName}-Samples:{SamplesNumber}";
+
+                var geometric = new MathNet.Numerics.Distributions.Geometric(0.5);
+                var generatedsamples = geometric.Samples().Take(SamplesNumber).ToArray();
+            }
+            else if (this.DistributionName == "Poisson")
+            {
+                fullName = $"{DistributionName}-Samples:{SamplesNumber}";
+
+                var poisson = new MathNet.Numerics.Distributions.Poisson(0.5);
+                var generatedsamples = poisson.Samples().Take(SamplesNumber).ToArray();
+            }
+            else if (this.DistributionName == "Normal")
+            {
+                fullName = $"{DistributionName}-Samples:{SamplesNumber}";
+
+                var normal = new MathNet.Numerics.Distributions.Normal(0.5, 2);
+                var generatedsamples = normal.Samples().Take(SamplesNumber).ToArray();
+            }
+
+            dateTimeElapsed = (DateTime.Now - dateTime).TotalMilliseconds;
             return dateTimeElapsed;
         }
 
         public string GetTestName()
         {
-            var fullName = $"{DistributionName}-Trials:{TrialsNumber}-Samples:{SamplesNumber}";
             return fullName;
         }
     }
